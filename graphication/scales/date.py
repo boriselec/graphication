@@ -161,11 +161,11 @@ class AutoDateScale(DateScale):
 
 
 def week_beginning(date):
-	return date - datetime.timedelta(0 - date.weekday())
+	return date + datetime.timedelta(1 - date.weekday())
 
 
 def week_range(start, end):
-	now = week_beginning(start) + datetime.timedelta(1)
+	now = week_beginning(start) - datetime.timedelta(1)
 	while now < end:
 		if now > start:
 			yield now
