@@ -385,6 +385,9 @@ class WaveGraph(object):
 			
 			bottom_stack = [bottoms[0]]
 			
+			# "white seams" workaround: overlapping 1px
+			shift = 1
+			
 			def close_path():
 				
 				if prev_style == Series.STYLE_LINETOP:
@@ -396,7 +399,9 @@ class WaveGraph(object):
 				context.line_to(*ppoint)
 				while bottom_stack:
 					npoint = bottom_stack.pop()
-					context.curve_to(ppoint[0]-dx, ppoint[1], npoint[0]+dx, npoint[1], npoint[0], npoint[1])
+					context.curve_to(ppoint[0]-dx,	ppoint[1]+shift,
+									 npoint[0]+dx,	npoint[1]+shift,
+									 npoint[0],		npoint[1]+shift)
 					ppoint = npoint
 				context.close_path()
 				
@@ -441,7 +446,9 @@ class WaveGraph(object):
 				ox, oy = tops[j-1]
 				nx, ny = tops[j]
 				dx = (nx - ox) * smooth
-				context.curve_to(ox+dx, oy, nx-dx, ny, nx, ny)
+				context.curve_to(ox+dx,	oy-shift, 
+								 nx-dx,	ny-shift, 
+								 nx,	ny-shift)
 				bottom_stack.append(bottoms[j])
 				
 				# If we have a new draw style, we need to end this segment and begin another
